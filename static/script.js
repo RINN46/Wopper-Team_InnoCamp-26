@@ -42,8 +42,16 @@ async function click_login(){
             alert("Incorrect password")
         } else if (response.error === 2){
             alert("Incorrect login")
-
         }
     }
 }
 
+async function click_timetable(){
+    location.href = "/timetable"
+}
+async function click_staff(){
+    location.href = "/staff"
+}
+async function click_profile(){
+    location.href = "/profile"
+}
