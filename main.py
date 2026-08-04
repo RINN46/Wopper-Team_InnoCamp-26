@@ -21,7 +21,6 @@ class OrgCreateData(BaseModel):
     owner: str
     name: str
 
-
 class User:
     def __init__(self):
         self.steck = ""
@@ -35,7 +34,6 @@ class Organization:
         self.users = []
         self.organization = ""
         self.messages = []
-
 organizations = []
 
 def find_organization(user):
@@ -48,12 +46,10 @@ class Message:
     def __init__(self):
         self.sender = ""
         self.text = ""
-
 @app.post("/send")
 async def send(request: Request, text: str):
 
     user = users[sessions[request.cookies.get("session_id")]]
-
     org = find_organization(user.id)
 
     if org is None:
@@ -69,7 +65,6 @@ async def send(request: Request, text: str):
     org.messages.append(m)
 
     return {"OK": True}
-
 @app.get("/chat")
 async def chat(request: Request):
 
@@ -91,13 +86,11 @@ async def chat(request: Request):
             "text": message.text
         })
 
-
     return {
         "OK": True,
         "organization": org.organization,
         "messages": chat
     }
-
 
 @app.get("/chat_page", response_class=HTMLResponse)
 async def chat_page(request: Request):
@@ -126,7 +119,6 @@ async def create_organization(request: Request, info: OrgCreateData):
 
     return {"OK": True}
 
-
 @app.post("/join_organization")
 async def join_organization(request: Request, name: str):
 
@@ -144,7 +136,6 @@ async def join_organization(request: Request, name: str):
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -204,7 +195,6 @@ def check_password(password):
         return "Нужно испрользовать специальные символы"
     return True
 
-
 @app.post("/reg")
 async def reg(request: Request, register_data: RegisterData):
     login = register_data.login
@@ -229,7 +219,6 @@ async def reg(request: Request, register_data: RegisterData):
     users.append(u)
     sessions[request.cookies.get("session_id")] = len(users)-1
     return {"OK": True, "id": ID}
-
 
 def check_name(name):
     if len(name) < 6 or len(name) > 30:
