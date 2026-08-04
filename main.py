@@ -279,3 +279,23 @@ async def personal(request: Request):
 @app.get("/timetable", response_class=HTMLResponse)
 async def timetable(request: Request):
     return templates.TemplateResponse(request, "timetable.html", {})
+
+@app.get("/user/{id}")
+async def get_user(id: int):
+
+    for user in users:
+        if user.id == id:
+            return {
+                "OK": True,
+                "user": {
+                    "id": user.id,
+                    "login": user.login,
+                    "name": user.name,
+                    "stack": user.steck
+                }
+            }
+
+    return {
+        "OK": False,
+        "error": "Пользователь не найден"
+    }
