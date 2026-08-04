@@ -140,13 +140,11 @@ def check_login(login):
         return True
     return False
 
-
 def first_id():
     a = 0
     while a in sorted(users, key=lambda x: x["ID"]):
         a += 1
     return a
-
 
 def check_password(password):
     symbols = "!@#$%^*(),[]{}"
