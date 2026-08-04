@@ -55,3 +55,6 @@ async function click_staff(){
 async function click_profile(){
     location.href = "/profile"
 }
+async function click_chat(){
+    location.href = "/chat"
+}

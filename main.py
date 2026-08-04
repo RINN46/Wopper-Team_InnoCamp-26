@@ -79,11 +79,24 @@ async def chat(request: Request):
             "text": message.text
         })
 
+
     return {
         "OK": True,
         "organization": org.organization,
         "messages": chat
     }
+
+
+@app.get("/chat_page", response_class=HTMLResponse)
+async def chat_page(request: Request):
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    org = find_organization(user.id)
+
+    if org is None:
+        return templates.TemplateResponse(request, "xchat_page.html", {})
+
+    return templates.TemplateResponse(request, "chat_page.html", {})
 
 @app.post("/create_organization")
 async def create_organization(request: Request, name: str):
