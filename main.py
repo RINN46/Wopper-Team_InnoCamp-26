@@ -5,17 +5,131 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 users = []
+sessions = {
 
+}
+app = fastapi.FastAPI()
 
 class User:
-    def init_user(self):
+    def __init__(self):
+        self.steck = ""
         self.login = ""
         self.password = ""
         self.name = ""
         self.id = 0
 
+class Organization:
+    def __init__(self):
+        self.users = []
+        self.organization = ""
+        self.messages = []
 
-app = fastapi.FastAPI()
+organizations = []
+
+def find_organization(user):
+    for org in organizations:
+        if user in org.users:
+            return org
+    return None
+
+class Message:
+    def __init__(self):
+        self.sender = ""
+        self.text = ""
+
+@app.post("/send")
+async def send(request: Request, text: str):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    org = find_organization(user.id)
+
+    if org is None:
+        return {
+            "OK": False,
+            "error": "Пользователь не состоит в организации"
+        }
+
+    m = Message()
+    m.sender = user.name
+    m.text = text
+
+    org.messages.append(m)
+
+    return {"OK": True}
+
+@app.get("/chat")
+async def chat(request: Request):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    org = find_organization(user.id)
+
+    if org is None:
+        return {
+            "OK": False,
+            "error": "Организация не найдена"
+        }
+
+    chat = []
+
+    for message in org.messages:
+        chat.append({
+            "sender": message.sender,
+            "text": message.text
+        })
+
+
+    return {
+        "OK": True,
+        "organization": org.organization,
+        "messages": chat
+    }
+
+
+@app.get("/chat_page", response_class=HTMLResponse)
+async def chat_page(request: Request):
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    org = find_organization(user.id)
+
+    if org is None:
+        return templates.TemplateResponse(request, "xchat_page.html", {})
+
+    return templates.TemplateResponse(request, "chat_page.html", {})
+
+@app.post("/create_organization")
+async def create_organization(request: Request, name: str):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    if find_organization(user) is not None:
+        return {"OK": False}
+
+    org = Organization()
+    org.organization = name
+    org.users.append(user)
+
+    organizations.append(org)
+
+    return {"OK": True}
+
+
+@app.post("/join_organization")
+async def join_organization(request: Request, name: str):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    if find_organization(user) is not None:
+        return {"OK": False}
+
+    for org in organizations:
+        if org.organization == name:
+            org.users.append(user)
+            return {"OK": True}
+
+    return {"OK": False}
+
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -24,6 +138,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root(request: Request):
     return templates.TemplateResponse(request, "Regestr_Web.html", {})
 
+@app.get("/main_page", response_class=HTMLResponse)
+async def main_page(request: Request):
+    return templates.TemplateResponse(request, "main_page.html", {})
 
 def check_login(login):
     if 5 <= len(login) <= 75:
@@ -36,13 +153,11 @@ def check_login(login):
         return True
     return False
 
-
 def first_id():
     a = 0
     while a in sorted(users, key=lambda x: x["ID"]):
         a += 1
     return a
-
 
 def check_password(password):
     symbols = "!@#$%^*(),[]{}"
@@ -71,23 +186,24 @@ def check_password(password):
 
 
 @app.post("/reg")
-async def reg(login: str, password: str, name: str, stack: str):
+async def reg(request, login: str, password: str, name: str, stack: str):
     u = User()
     if not check_login(login):
         return {"OK": False, "id": 0, "error": 1}
     u.login = login
     if not check_password(password):
-        return {"OK": False, "id": 0}
+        return {"OK": False, "id": 0, "error": 2}
     u.password = password
     if not check_name(name):
-        return {"OK": False, "id": 0}
+        return {"OK": False, "id": 0, "error": 3}
     u.name = name
     if not check_stack(stack):
-        return {"OK": False, "id": 0 }
+        return {"OK": False, "id": 0, "error": 4}
 
     ID = first_id()
     u.id = ID
     users.append(u)
+    sessions[request.cookies.get("session_id")] = len(users)-1
     return {"OK": True, "id": ID}
 
 
@@ -111,26 +227,49 @@ def check_name(name):
     return True
 
 @app.post("/login")
-async def login(login: str, password: str):
+async def login(request, login: str, password: str):
     for u in users:
         if u.login == login:
             if u.password == password:
+                sessions[request.cookies.get("session_id")] = users.index(u)
                 return {
                     "OK": True,
                     "id": u.id
                 }
+
             else:
                 return {
                     "OK": False,
-                    "id": 0
+                    "id": 0,
+                    "error": 1
                 }
 
     return {
         "OK": False,
-        "id": 0
+        "id": 0,
+        "error": 2
     }
 
 def check_stack(stack):
     if 3 <= len(stack) <= 75:
         return True
     return False
+
+class Message:
+    def __init__(self):
+        self.sender = ""
+        self.text = ""
+
+messages = []
+
+@app.post("/send")
+async def send(request, organization: int, text: str):
+
+    m = Message()
+    m.sender = users[sessions[request.cookies.get("session_id")]].name
+    m.text = text
+
+
+    return {"OK": True}
+
+
