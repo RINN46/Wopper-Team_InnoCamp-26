@@ -280,15 +280,13 @@ async def personal(request: Request):
 async def timetable(request: Request):
     return templates.TemplateResponse(request, "timetable.html", {})
 
-<<<<<<< HEAD
-@app.get("/")
+@app.get("/members")
 def show_members():
     return templates.TemplateResponse(
         "employees.html",
         {"employees": employees}
     )
 
-=======
 @app.get("/user/{id}")
 async def get_user(id: int):
 
@@ -381,4 +379,3 @@ async def add_user_timetable(request: Request, event: str):
     user.timetable.append(event)
 
     return {"OK": True}
->>>>>>> b0bee632e7564c3a2a3a89bc1fb0ae25e7228003
