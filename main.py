@@ -5,7 +5,9 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 users = []
+sessions = {
 
+}
 
 class User:
     def __init__(self):
@@ -15,7 +17,7 @@ class User:
         self.name = ""
         self.id = 0
 
-class organization:
+class Organization:
     def __init__(self):
         self.users = []
         self.organization = ""
@@ -80,7 +82,7 @@ def check_password(password):
 
 
 @app.post("/reg")
-async def reg(login: str, password: str, name: str, stack: str):
+async def reg(request, login: str, password: str, name: str, stack: str):
     u = User()
     if not check_login(login):
         return {"OK": False, "id": 0, "error": 1}
@@ -97,6 +99,7 @@ async def reg(login: str, password: str, name: str, stack: str):
     ID = first_id()
     u.id = ID
     users.append(u)
+    sessions[request.cookies.get("session_id")] = len(users)-1
     return {"OK": True, "id": ID}
 
 
@@ -120,23 +123,27 @@ def check_name(name):
     return True
 
 @app.post("/login")
-async def login(login: str, password: str):
+async def login(request, login: str, password: str):
     for u in users:
         if u.login == login:
             if u.password == password:
+                sessions[request.cookies.get("session_id")] = users.index(u)
                 return {
                     "OK": True,
                     "id": u.id
                 }
+
             else:
                 return {
                     "OK": False,
-                    "id": 0
+                    "id": 0,
+                    "error": 1
                 }
 
     return {
         "OK": False,
-        "id": 0
+        "id": 0,
+        "error": 2
     }
 
 def check_stack(stack):
@@ -148,38 +155,26 @@ class Message:
     def __init__(self):
         self.sender = 0
         self.receiver = 0
+        self.sender = ""
         self.text = ""
 
 messages = []
 
 @app.post("/send")
-async def send(sender: int, receiver: int, text: str):
-    sender_exists = False
-    receiver_exists = False
-
-    for user in users:
-        if user.id == sender:
-            sender_exists = True
-        if user.id == receiver:
-            receiver_exists = True
-
-    if not sender_exists or not receiver_exists:
-        return {"OK": False}
+async def send(request, organization: int, text: str):
 
     m = Message()
-    m.sender = sender
-    m.receiver = receiver
+    m.sender = users[sessions[request.cookies.get("session_id")]].name
     m.text = text
 
-    messages.append(m)
 
     return {"OK": True}
 
 @app.get("/chat")
-async def chat(user1: int, user2: int):
-    chat = []
-
-    for message in messages:
+async def chat(request):
+    u = users[sessions[request.cookies.get("session_id")]]
+    chat = 0
+    for message in:
         if (
             (message.sender == user1 and message.receiver == user2)
             or
