@@ -8,6 +8,7 @@ users = []
 sessions = {
 
 }
+app = fastapi.FastAPI()
 
 class User:
     def __init__(self):
@@ -25,9 +26,9 @@ class Organization:
 
 organizations = []
 
-def find_organization(user_id):
+def find_organization(user):
     for org in organizations:
-        if user_id in org.users:
+        if user in org.users:
             return org
     return None
 
@@ -89,12 +90,12 @@ async def create_organization(request: Request, name: str):
 
     user = users[sessions[request.cookies.get("session_id")]]
 
-    if find_organization(user.id) is not None:
+    if find_organization(user) is not None:
         return {"OK": False}
 
     org = Organization()
     org.organization = name
-    org.users.append(user.id)
+    org.users.append(user)
 
     organizations.append(org)
 
@@ -106,17 +107,16 @@ async def join_organization(request: Request, name: str):
 
     user = users[sessions[request.cookies.get("session_id")]]
 
-    if find_organization(user.id) is not None:
+    if find_organization(user) is not None:
         return {"OK": False}
 
     for org in organizations:
         if org.organization == name:
-            org.users.append(user.id)
+            org.users.append(user)
             return {"OK": True}
 
     return {"OK": False}
 
-app = fastapi.FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -127,7 +127,7 @@ async def root(request: Request):
 
 @app.get("/main_page", response_class=HTMLResponse)
 async def main_page(request: Request):
-    return templates.TemplateResponse(request, "Regestr_Web.html", {})
+    return templates.TemplateResponse(request, "main_page.html", {})
 
 def check_login(login):
     if 5 <= len(login) <= 75:
@@ -261,23 +261,4 @@ async def send(request, organization: int, text: str):
 
     return {"OK": True}
 
-@app.get("/chat")
-async def chat(request):
-    u = users[sessions[request.cookies.get("session_id")]]
-    org = find_organization(u)
-    chat = 0
-
-    for message in  :
-        if (
-            (message.sender == user1 and message.receiver == user2)
-            or
-            (message.sender == user2 and message.receiver == user1)
-        ):
-            chat.append({
-                "sender": message.sender,
-                "receiver": message.receiver,
-                "text": message.text
-            })
-
-    return {"OK": True, "messages": chat}
 
