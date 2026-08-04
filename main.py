@@ -21,7 +21,100 @@ class Organization:
     def __init__(self):
         self.users = []
         self.organization = ""
+        self.messages = []
 
+organizations = []
+
+def find_organization(user_id):
+    for org in organizations:
+        if user_id in org.users:
+            return org
+    return None
+
+class Message:
+    def __init__(self):
+        self.sender = ""
+        self.text = ""
+
+@app.post("/send")
+async def send(request: Request, text: str):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    org = find_organization(user.id)
+
+    if org is None:
+        return {
+            "OK": False,
+            "error": "Пользователь не состоит в организации"
+        }
+
+    m = Message()
+    m.sender = user.name
+    m.text = text
+
+    org.messages.append(m)
+
+    return {"OK": True}
+
+@app.get("/chat")
+async def chat(request: Request):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    org = find_organization(user.id)
+
+    if org is None:
+        return {
+            "OK": False,
+            "error": "Организация не найдена"
+        }
+
+    chat = []
+
+    for message in org.messages:
+        chat.append({
+            "sender": message.sender,
+            "text": message.text
+        })
+
+    return {
+        "OK": True,
+        "organization": org.organization,
+        "messages": chat
+    }
+
+@app.post("/create_organization")
+async def create_organization(request: Request, name: str):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    if find_organization(user.id) is not None:
+        return {"OK": False}
+
+    org = Organization()
+    org.organization = name
+    org.users.append(user.id)
+
+    organizations.append(org)
+
+    return {"OK": True}
+
+
+@app.post("/join_organization")
+async def join_organization(request: Request, name: str):
+
+    user = users[sessions[request.cookies.get("session_id")]]
+
+    if find_organization(user.id) is not None:
+        return {"OK": False}
+
+    for org in organizations:
+        if org.organization == name:
+            org.users.append(user.id)
+            return {"OK": True}
+
+    return {"OK": False}
 
 app = fastapi.FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -171,9 +264,10 @@ async def send(request, organization: int, text: str):
 @app.get("/chat")
 async def chat(request):
     u = users[sessions[request.cookies.get("session_id")]]
+    org = find_organization(u)
     chat = 0
 
-    for message in :
+    for message in  :
         if (
             (message.sender == user1 and message.receiver == user2)
             or
@@ -186,3 +280,4 @@ async def chat(request):
             })
 
     return {"OK": True, "messages": chat}
+
