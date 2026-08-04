@@ -280,6 +280,7 @@ async def personal(request: Request):
 async def timetable(request: Request):
     return templates.TemplateResponse(request, "timetable.html", {})
 
+<<<<<<< HEAD
 @app.get("/")
 def show_members():
     return templates.TemplateResponse(
@@ -287,3 +288,97 @@ def show_members():
         {"employees": employees}
     )
 
+=======
+@app.get("/user/{id}")
+async def get_user(id: int):
+
+    for user in users:
+        if user.id == id:
+            return {
+                "OK": True,
+                "user": {
+                    "id": user.id,
+                    "login": user.login,
+                    "name": user.name,
+                    "stack": user.steck
+                }
+            }
+
+    return {
+        "OK": False,
+        "error": "Пользователь не найден"
+    }
+
+
+@app.get("/user_timetable")
+async def user_timetable(request: Request):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+
+    return {
+        "OK": True,
+        "timetable": user.timetable
+    }
+
+
+@app.get("/organization_timetable")
+async def organization_timetable(request: Request):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    org = find_organization(user.id)
+
+    if org is None:
+        return {
+            "OK": False,
+            "error": "Организация не найдена"
+        }
+
+    return {
+        "OK": True,
+        "organization": org.organization,
+        "timetable": org.timetable
+    }
+
+
+@app.post("/organization_timetable/add")
+async def add_timetable(request: Request, event: str):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    org = find_organization(user.id)
+
+    if org is None:
+        return {"OK": False}
+
+    org.timetable.append(event)
+
+    return {"OK": True}
+
+
+@app.post("/user_timetable/add")
+async def add_user_timetable(request: Request, event: str):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    user.timetable.append(event)
+
+    return {"OK": True}
+>>>>>>> b0bee632e7564c3a2a3a89bc1fb0ae25e7228003
