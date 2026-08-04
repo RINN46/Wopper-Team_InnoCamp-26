@@ -272,4 +272,10 @@ async def send(request, organization: int, text: str):
 
     return {"OK": True}
 
+@app.get("/personal", response_class=HTMLResponse)
+async def personal(request: Request):
+    return templates.TemplateResponse(request, "personal.html", {})
 
+@app.get("/timetable", response_class=HTMLResponse)
+async def timetable(request: Request):
+    return templates.TemplateResponse(request, "timetable.html", {})
