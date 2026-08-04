@@ -8,11 +8,17 @@ users = []
 
 
 class User:
-    def init_user(self):
+    def __init__(self):
+        self.steck = ""
         self.login = ""
         self.password = ""
         self.name = ""
         self.id = 0
+
+class organization:
+    def __init__(self):
+        self.users = []
+        self.organization = ""
 
 
 app = fastapi.FastAPI()
@@ -77,13 +83,13 @@ async def reg(login: str, password: str, name: str, stack: str):
         return {"OK": False, "id": 0, "error": 1}
     u.login = login
     if not check_password(password):
-        return {"OK": False, "id": 0}
+        return {"OK": False, "id": 0, "error": 2}
     u.password = password
     if not check_name(name):
-        return {"OK": False, "id": 0}
+        return {"OK": False, "id": 0, "error": 3}
     u.name = name
     if not check_stack(stack):
-        return {"OK": False, "id": 0 }
+        return {"OK": False, "id": 0, "error": 4}
 
     ID = first_id()
     u.id = ID
@@ -134,3 +140,52 @@ def check_stack(stack):
     if 3 <= len(stack) <= 75:
         return True
     return False
+
+class Message:
+    def __init__(self):
+        self.sender = 0      # ID отправителя
+        self.receiver = 0    # ID получателя
+        self.text = ""
+
+messages = []
+
+@app.post("/send")
+async def send(sender: int, receiver: int, text: str):
+    sender_exists = False
+    receiver_exists = False
+
+    for user in users:
+        if user.id == sender:
+            sender_exists = True
+        if user.id == receiver:
+            receiver_exists = True
+
+    if not sender_exists or not receiver_exists:
+        return {"OK": False}
+
+    m = Message()
+    m.sender = sender
+    m.receiver = receiver
+    m.text = text
+
+    messages.append(m)
+
+    return {"OK": True}
+
+@app.get("/chat")
+async def chat(user1: int, user2: int):
+    chat = []
+
+    for message in messages:
+        if (
+            (message.sender == user1 and message.receiver == user2)
+            or
+            (message.sender == user2 and message.receiver == user1)
+        ):
+            chat.append({
+                "sender": message.sender,
+                "receiver": message.receiver,
+                "text": message.text
+            })
+
+    return {"OK": True, "messages": chat}
