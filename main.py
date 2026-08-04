@@ -394,5 +394,3 @@ async def add_user_timetable(request: Request, event: str):
 
     return {"OK": True}
 
-    return {"OK": True}
-
