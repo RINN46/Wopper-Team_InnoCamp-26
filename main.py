@@ -4,8 +4,9 @@ from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 from pydantic import BaseModel
+from typing import List
 
-users = []
+
 sessions = {
 
 }
@@ -16,6 +17,9 @@ class RegisterData(BaseModel):
     password: str
     name: str
     stack: str
+
+class RemoveData(BaseModel):
+    login: str
 
 class TimetableData(BaseModel):
     title: str
@@ -48,19 +52,32 @@ class User:
         self.password = ""
         self.name = ""
         self.timetable = []
+        self.mark = 4
         self.id = 0
         self.tasks = []
 
 class Organization:
     def __init__(self):
-        self.users = []
+        u = User()
+        u.name = "goy"
+        u.login = "hi"
+        u.steck = "ji"
+        u1 = User()
+        u1.name = "goy1"
+        u1.login = "hi1e"
+        u1.steck = "ji"
+        u2 = User()
+        u2.name = "goy2"
+        u2.login = "hi2"
+        u2.steck = "jio"
+        self.users = [u, u1, u2]
         self.organization = ""
         self.messages = []
 
 
-organizations = []
-
-def find_organization(user):
+organizations: List[Organization] = [Organization()]
+users: List[User] = []
+def find_organization(user) -> Organization:
     for org in organizations:
         if user in org.users:
             return org
@@ -143,20 +160,25 @@ async def create_organization(request: Request, info: OrgCreateData):
 
     return {"OK": True}
 
-@app.post("/join_organization")
-async def join_organization(request: Request, name: str):
+def get_user_by_login(login) -> User:
+    for i in users:
+        if i.login == login:
+            return i
 
-    user = users[sessions[request.cookies.get("session_id")]]
+
+@app.post("/join_organization")
+async def join_organization(request: Request, login: str):
+
+
+    user = get_user_by_login(login)
 
     if find_organization(user) is not None:
         return {"OK": "Организация не найдена"}
+    owner = find_organization(users[sessions[request.cookies.get("session_id")]])
+    org = find_organization(owner)
+    org.users.append(user)
 
-    for org in organizations:
-        if org.organization == name:
-            org.users.append(user)
-            return {"OK": True}
-
-    return {"OK": "Организация не найдена"}
+    return {"OK": "Организация найдена"}
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -253,10 +275,11 @@ async def reg(request: Request, register_data: RegisterData):
     u.name = name
     if check_stack(stack) != True:
         return {"OK": False, "id": 0, "error": 4, "description": check_stack(stack)}
-
+    u.steck = stack
     ID = first_id()
     u.id = ID
     users.append(u)
+    organizations[0].users.append(u)
     sessions[request.cookies.get("session_id")] = len(users)-1
     return {"OK": True, "id": ID}
 
@@ -391,6 +414,28 @@ async def user_tasks(request: Request):
         "timetable": table
     }
 
+@app.get("/user_staff")
+async def user_staff(request: Request):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    org = find_organization(user)
+    table = []
+    for i in org.users:
+        table.append({
+            "name": i.name,
+            "stack": i.steck,
+            "mark": i.mark,
+            "login": i.login
+        })
+    return {
+        "OK": True,
+        "staff": table
+    }
 
 @app.post("/user_timetable/add")
 async def add_user_timetable(request: Request, timetableData: TimetableData):
@@ -409,3 +454,21 @@ async def add_user_timetable(request: Request, timetableData: TimetableData):
 
     return {"OK": True}
 
+def get_id_in_org(user, org):
+    for i in range(len(org.users)):
+        if org.users[i].login == user.login:
+            return i
+
+@app.post("/remove_user")
+async def remove_user(request: Request, removeData: RemoveData):
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    org: Organization = find_organization(user)
+    org.users.pop(get_id_in_org(removeData, org))
+
+
+    return {"OK": True}
