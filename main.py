@@ -83,7 +83,7 @@ async def reg(login: str, password: str, name: str, stack: str):
         return {"OK": False, "id": 0}
     u.name = name
     if not check_stack(stack):
-        return {"OK": False, "id": 0}
+        return {"OK": False, "id": 0 }
 
     ID = first_id()
     u.id = ID
