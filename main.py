@@ -21,10 +21,18 @@ class RegisterData(BaseModel):
 class RemoveData(BaseModel):
     login: str
 
+class TaskData(BaseModel):
+    title: str
+    login: str
+    deadline: str
+
 class TimetableData(BaseModel):
     title: str
     time: str
     description: str
+
+class RemoveTData(BaseModel):
+    title: str
 
 class LoginData(BaseModel):
     login: str
@@ -411,7 +419,7 @@ async def user_tasks(request: Request):
         })
     return {
         "OK": True,
-        "timetable": table
+        "tasks": table
     }
 
 @app.get("/user_staff")
@@ -470,5 +478,38 @@ async def remove_user(request: Request, removeData: RemoveData):
     org: Organization = find_organization(user)
     org.users.pop(get_id_in_org(removeData, org))
 
+
+    return {"OK": True}
+
+def find_ind_of_task(li, name):
+    for i in range(len(li)):
+        if li[i].title == name:
+            return i
+
+
+@app.post("/remove_user")
+async def remove_user(request: Request, removeTData: RemoveTData):
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    user.tasks.pop(find_ind_of_task(user.tasks, removeTData.title))
+
+
+    return {"OK": True}
+
+@app.post("/add_task")
+async def add_task(request: Request, taskData: TaskData):
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+    task = Task()
+    task.title = taskData.title
+    task.deadline = taskData.deadline
+    u = get_user_by_login(taskData.login)
+    u.tasks.append(task)
 
     return {"OK": True}
