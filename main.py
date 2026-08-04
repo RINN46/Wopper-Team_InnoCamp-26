@@ -17,6 +17,11 @@ class RegisterData(BaseModel):
     name: str
     stack: str
 
+class TimetableData(BaseModel):
+    title: str
+    time: str
+    description: str
+
 class LoginData(BaseModel):
     login: str
     password: str
@@ -31,6 +36,11 @@ class TimetableTask:
         self.description = ""
         self.time = ""
 
+class Task:
+    def __init__(self):
+        self.title = ""
+        self.deadline = ""
+
 class User:
     def __init__(self):
         self.steck = ""
@@ -39,12 +49,15 @@ class User:
         self.name = ""
         self.timetable = []
         self.id = 0
+        self.tasks = []
 
 class Organization:
     def __init__(self):
         self.users = []
         self.organization = ""
         self.messages = []
+
+
 organizations = []
 
 def find_organization(user):
@@ -152,13 +165,25 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root(request: Request):
     return templates.TemplateResponse(request, "RegBlock.html", {})
 
+@app.get("/menagment", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse(request, "management.html", {})
+
 @app.get("/login_page", response_class=HTMLResponse)
 async def login_p(request: Request):
     return templates.TemplateResponse(request, "Sign_In.html", {})
 
 @app.get("/main_page", response_class=HTMLResponse)
 async def main_page(request: Request):
-    return templates.TemplateResponse(request, "main_page.html", {})
+    return templates.TemplateResponse(request, "index.html", {})
+
+@app.get("/tasks", response_class=HTMLResponse)
+async def tasks(request: Request):
+    return templates.TemplateResponse(request, "tasks.html", {})
+
+@app.get("/staff", response_class=HTMLResponse)
+async def staff(request: Request):
+    return templates.TemplateResponse(request, "employees.html", {})
 
 def check_login(login):
     if 5 <= len(login) <= 75:
@@ -304,9 +329,6 @@ async def send(request, organization: int, text: str):
 async def personal(request: Request):
     return templates.TemplateResponse(request, "personal.html", {})
 
-@app.get("/timetable", response_class=HTMLResponse)
-async def timetable(request: Request):
-    return templates.TemplateResponse(request, "timetable.html", {})
 
 @app.get("/user/{id}")
 async def get_user(id):
@@ -349,9 +371,8 @@ async def user_timetable(request: Request):
         "timetable": table
     }
 
-
-@app.get("/organization_timetable")
-async def organization_timetable(request: Request):
+@app.get("/user_tasks")
+async def user_tasks(request: Request):
 
     session_id = request.cookies.get("session_id")
 
@@ -359,49 +380,31 @@ async def organization_timetable(request: Request):
         return {"OK": False}
 
     user = users[sessions[session_id]]
-    org = find_organization(user.id)
-
-    if org is None:
-        return {
-            "OK": False,
-            "error": "Организация не найдена"
-        }
-
+    table = []
+    for i in user.tasks:
+        table.append({
+            "title": i.title,
+            "time": i.deadline,
+        })
     return {
         "OK": True,
-        "organization": org.organization,
-        "timetable": org.timetable
+        "timetable": table
     }
 
 
-@app.post("/organization_timetable/add")
-async def add_timetable(request: Request, event: str):
-
-    session_id = request.cookies.get("session_id")
-
-    if session_id not in sessions:
-        return {"OK": False}
-
-    user = users[sessions[session_id]]
-    org = find_organization(user.id)
-
-    if org is None:
-        return {"OK": False}
-
-    org.timetable.append(event)
-
-    return {"OK": True}
-
 @app.post("/user_timetable/add")
-async def add_user_timetable(request: Request, event: str):
-
+async def add_user_timetable(request: Request, timetableData: TimetableData):
     session_id = request.cookies.get("session_id")
 
     if session_id not in sessions:
         return {"OK": False}
 
     user = users[sessions[session_id]]
-    user.timetable.append(event)
+    table = TimetableTask()
+    table.time = timetableData.time
+    table.description = timetableData.description
+    table.title = timetableData.title
+    user.timetable.append()
 
 
     return {"OK": True}
