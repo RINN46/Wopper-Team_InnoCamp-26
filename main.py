@@ -17,6 +17,10 @@ class RegisterData(BaseModel):
     name: str
     stack: str
 
+class LoginData(BaseModel):
+    login: str
+    password: str
+
 class OrgCreateData(BaseModel):
     owner: str
     name: str
@@ -141,6 +145,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root(request: Request):
     return templates.TemplateResponse(request, "RegBlock.html", {})
 
+@app.get("/login_page", response_class=HTMLResponse)
+async def login_p(request: Request):
+    return templates.TemplateResponse(request, "Sign_In.html", {})
+
 @app.get("/main_page", response_class=HTMLResponse)
 async def main_page(request: Request):
     return templates.TemplateResponse(request, "main_page.html", {})
@@ -240,10 +248,12 @@ def check_name(name):
     return True
 
 @app.post("/login")
-async def login(request, login: str, password: str):
+async def login(request: Request, login_data: LoginData):
+
     for u in users:
-        if u.login == login:
-            if u.password == password:
+        print(u.login)
+        if u.login == login_data.login:
+            if u.password == login_data.password:
                 sessions[request.cookies.get("session_id")] = users.index(u)
                 return {
                     "OK": True,

@@ -41,11 +41,20 @@ async function click_register(){
 
 async function click_login(){
     console.log("try to login")
-    const login = document.getElementById("login").textContent
-    const password = document.getElementById("password").textContent
+    const login = document.getElementById("login").value
+    const password = document.getElementById("password").value
+    console.log(login, password)
 
-
-    const response = await fetch(`/reg?login=${login}&password=${password}`, {method: "POST"});
+    const response = await fetch("../login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            login,
+            password
+        })
+    });
     const data = await response.json()
     if (data.OK){
         location.href = "/main_page"

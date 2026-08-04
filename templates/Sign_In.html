@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./Sign_In.CSS" />
+    <link rel="stylesheet" href="../static/Sign_In.CSS" />
     <title>Галерея мемов - Регистрация</title>
-
+    <script src="../static/script.js"></script>
     <!-- Подключаем шрифт Inter с Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +35,7 @@
                 >
 
                 <!-- Поле: Фамилия -->
-                <label for= password" class="text">Пароль</label>
+                <label for= "password" class="text">Пароль</label>
                 <input type="password"
                     class="text_input_element"
                     id="password"
@@ -47,12 +47,12 @@
                 <br>
 
                 <!-- Кнопка -->
-                <button class="send_but">Отправить</button>
+                <button class="send_but" onclick="click_login()">Отправить</button>
 
                 <br>
 
                 <div class="centred_items">
-                    <a href="./Regestr_Web.html" class="text">у меня еще нет аккаунта</a>
+                    <a href="./" class="text">у меня еще нет аккаунта</a>
                 </div>
 
             </div>
