@@ -17,6 +17,11 @@ class RegisterData(BaseModel):
     name: str
     stack: str
 
+class OrgCreateData(BaseModel):
+    owner: str
+    name: str
+
+
 class User:
     def __init__(self):
         self.steck = ""
@@ -106,7 +111,7 @@ async def chat_page(request: Request):
     return templates.TemplateResponse(request, "chat_page.html", {})
 
 @app.post("/create_organization")
-async def create_organization(request: Request, name: str):
+async def create_organization(request: Request, info: OrgCreateData):
 
     user = users[sessions[request.cookies.get("session_id")]]
 
@@ -114,7 +119,7 @@ async def create_organization(request: Request, name: str):
         return {"OK": "Организация не найдена"}
 
     org = Organization()
-    org.organization = name
+    org.organization = info.name
     org.users.append(user)
 
     organizations.append(org)
@@ -152,7 +157,7 @@ async def main_page(request: Request):
 def check_login(login):
     if 5 <= len(login) <= 75:
         for i in login:
-            if not (i.isalpha() or isdigit() or i in ["-", "_"]):
+            if not (i.isalpha() or i.isdigit() or i in ["-", "_"]):
                 return "Можно испольщовать только латинские буквы, цифры, и _ -"
         for i in users:
             if i.login == login:
@@ -162,7 +167,7 @@ def check_login(login):
 
 def first_id():
     a = 0
-    while a in sorted(users, key=lambda x: x.ID):
+    while a in sorted(users, key=lambda x: x.id):
         a += 1
     return a
 
@@ -207,17 +212,17 @@ async def reg(request: Request, register_data: RegisterData):
     name = register_data.name
     stack = register_data.stack
     u = User()
-    if not check_login(login):
-        return {"OK": False, "id": 0, "error": 1}
+    if check_login(login) != True:
+        return {"OK": False, "id": 0, "error": 1, "description": check_login(login)}
     u.login = login
-    if not check_password(password):
-        return {"OK": False, "id": 0, "error": 2}
+    if check_password(password) != True:
+        return {"OK": False, "id": 0, "error": 2, "description": check_password(password)}
     u.password = password
-    if not check_name(name):
-        return {"OK": False, "id": 0, "error": 3}
+    if check_name(name) != True:
+        return {"OK": False, "id": 0, "error": 3, "description": check_name(name)}
     u.name = name
-    if not check_stack(stack):
-        return {"OK": False, "id": 0, "error": 4}
+    if check_stack(stack) != True:
+        return {"OK": False, "id": 0, "error": 4, "description": check_stack(stack)}
 
     ID = first_id()
     u.id = ID
@@ -297,15 +302,8 @@ async def personal(request: Request):
 async def timetable(request: Request):
     return templates.TemplateResponse(request, "timetable.html", {})
 
-@app.get("/members")
-def show_members():
-    return templates.TemplateResponse(
-        "employees.html",
-        {"employees": employees}
-    )
-
 @app.get("/user/{id}")
-async def get_user(id: int):
+async def get_user(id):
 
     for user in users:
         if user.id == id:
