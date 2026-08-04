@@ -170,7 +170,7 @@ def check_password(password):
     symbols = "!@#$%^*(),[]{}"
 
     if len(password) < 10 or len(password) > 50:
-        return False
+        return "Пароль должен содержать от 10 до 50 символов"
 
     has_lower = False
     has_upper = False
@@ -189,7 +189,15 @@ def check_password(password):
         else:
             return False
 
-    return has_lower and has_upper and has_digit and has_symbol
+    if has_lower == False:
+        return "Нужно использовать строчные буквы"
+    if has_upper == False:
+        return "Нужно использовать заглавные буквы"
+    if has_digit == False:
+        return "Нужно использовать цифры"
+    if has_symbol == False:
+        return "Нужно испрользовать специальные символы"
+    return True
 
 
 @app.post("/reg")
