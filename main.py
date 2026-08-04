@@ -104,7 +104,7 @@ async def create_organization(request: Request, name: str):
     user = users[sessions[request.cookies.get("session_id")]]
 
     if find_organization(user) is not None:
-        return {"OK": False}
+        return {"OK": "Организация не найдена"}
 
     org = Organization()
     org.organization = name
@@ -121,14 +121,14 @@ async def join_organization(request: Request, name: str):
     user = users[sessions[request.cookies.get("session_id")]]
 
     if find_organization(user) is not None:
-        return {"OK": False}
+        return {"OK": "Организация не найдена"}
 
     for org in organizations:
         if org.organization == name:
             org.users.append(user)
             return {"OK": True}
 
-    return {"OK": False}
+    return {"OK": "Организация не найдена"}
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -145,13 +145,13 @@ async def main_page(request: Request):
 def check_login(login):
     if 5 <= len(login) <= 75:
         for i in login:
-            if not (i.isalpha() or i.isdigit() or i in ["-", "_"]):
-                return False
+            if not (i.isalpha() or isdigit() or i in ["-", "_"]):
+                return "Можно испольщовать только латинские буквы, цифры, и _ -"
         for i in users:
             if i.login == login:
-                return False
+                return "Логин уже существует"
         return True
-    return False
+    return "логин должен быть от 5 до 75 символов"
 
 def first_id():
     a = 0
