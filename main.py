@@ -74,7 +74,7 @@ def check_password(password):
 async def reg(login: str, password: str, name: str, stack: str):
     u = User()
     if not check_login(login):
-        return {"OK": False, "id": 0}
+        return {"OK": False, "id": 0, "error": 1}
     u.login = login
     if not check_password(password):
         return {"OK": False, "id": 0}
