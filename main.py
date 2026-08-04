@@ -1,6 +1,7 @@
 import fastapi
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
+from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 users = []
@@ -15,7 +16,8 @@ class User:
 
 
 app = fastapi.FastAPI()
-templates = Jinja2Templates(directory="Front_end")
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -69,8 +71,7 @@ def check_password(password):
 
 
 @app.post("/reg")
-async def reg(login: str, password: str, name: str, clock: int, tags: str, biography: str,
-              notification: int, confirm: bool):
+async def reg(login: str, password: str, name: str, stack: str):
     u = User()
     if not check_login(login):
         return {"OK": False, "id": 0}
@@ -81,6 +82,8 @@ async def reg(login: str, password: str, name: str, clock: int, tags: str, biogr
     if not check_name(name):
         return {"OK": False, "id": 0}
     u.name = name
+    if not check_stack(stack):
+        return {"OK": False, "id": 0}
 
     ID = first_id()
     u.id = ID
@@ -126,3 +129,8 @@ async def login(login: str, password: str):
         "OK": False,
         "id": 0
     }
+
+def check_stack(stack):
+    if 3 <= len(stack) <= 75:
+        return True
+    return False
