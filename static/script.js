@@ -58,3 +58,4 @@ async function click_profile(){
 async function click_chat(){
     location.href = "/chat"
 }
+
