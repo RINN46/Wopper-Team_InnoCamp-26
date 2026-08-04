@@ -227,21 +227,21 @@ async def reg(request: Request, register_data: RegisterData):
 
 
 def check_name(name):
-    if len(name) < 6 or len(name) > 200:
-        return False
+    if len(name) < 6 or len(name) > 30:
+        return "Имя должно содержать от 6 до 30 символов"
 
     words = name.split()
 
     if len(words) == 0:
-        return False
+        return "Введите имя"
 
     for word in words:
         if not ('А' <= word[0] <= 'Я'):
-            return False
+            return "Используйте Заглавные буквы в начале имени или фамилии"
 
         for char in word[1:]:
             if not ('а' <= char <= 'я'):
-                return False
+                return "Используйте только строчную киррилицу как непервые символы имени или фамилии"
 
     return True
 
