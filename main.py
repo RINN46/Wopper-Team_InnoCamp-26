@@ -262,7 +262,6 @@ async def login(request, login: str, password: str):
                     "id": 0,
                     "error": 1
                 }
-
     return {
         "OK": False,
         "id": 0,
@@ -287,7 +286,6 @@ async def send(request, organization: int, text: str):
     m = Message()
     m.sender = users[sessions[request.cookies.get("session_id")]].name
     m.text = text
-
 
     return {"OK": True}
 
@@ -325,7 +323,6 @@ async def get_user(id: int):
         "OK": False,
         "error": "Пользователь не найден"
     }
-
 
 @app.get("/user_timetable")
 async def user_timetable(request: Request):
@@ -384,7 +381,6 @@ async def add_timetable(request: Request, event: str):
     org.timetable.append(event)
 
     return {"OK": True}
-
 
 @app.post("/user_timetable/add")
 async def add_user_timetable(request: Request, event: str):
