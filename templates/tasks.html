@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WorkFlow - Сотрудники</title>
+    <title>WorkFlow - Задачи</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,74 +19,177 @@
         <aside>
             <nav class="nav-menu">
                 <a href="index.html" class="nav-item">расписание</a>
-                <a href="employees.html" class="nav-item active">Сотрудники</a>
-                <a href="tasks.html" class="nav-item">задачи</a>
+                <a href="employees.html" class="nav-item">Сотрудники</a>
+                <a href="tasks.html" class="nav-item active">задачи</a>
                 <a href="management.html" class="nav-item">менеджмент</a>
             </nav>
         </aside>
 
         <main>
-            <h1>Сотрудники</h1>
+            <div class="main-content">
+                <h1>Задачи</h1>
 
-            <table class="employees-table">
-                <thead>
-                    <tr>
-                        <th>ФИО</th>
-                        <th>Должность</th>
-                        <th>Оценка</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="employee-name">Иван Петров</td>
-                        <td>Разработчик</td>
-                        <td>
-                            <div class="rating-container">
-                                <input type="number" class="rating-input" value="4" min="0" max="5">
-                                <span>/5</span>
-                            </div>
-                        </td>
-                        <td><button class="delete-btn">Удалить</button></td>
-                    </tr>
-                    <tr>
-                        <td class="employee-name">Мария Сидорова</td>
-                        <td>Дизайнер</td>
-                        <td>
-                            <div class="rating-container">
-                                <input type="number" class="rating-input" value="5" min="0" max="5">
-                                <span>/5</span>
-                            </div>
-                        </td>
-                        <td><button class="delete-btn">Удалить</button></td>
-                    </tr>
-                    <tr>
-                        <td class="employee-name">Алексей Козлов</td>
-                        <td>Менеджер</td>
-                        <td>
-                            <div class="rating-container">
-                                <input type="number" class="rating-input" value="4" min="0" max="5">
-                                <span>/5</span>
-                            </div>
-                        </td>
-                        <td><button class="delete-btn">Удалить</button></td>
-                    </tr>
-                    <tr>
-                        <td class="employee-name">Ольга Волкова</td>
-                        <td>Аналитик</td>
-                        <td>
-                            <div class="rating-container">
-                                <input type="number" class="rating-input" value="4" min="0" max="5">
-                                <span>/5</span>
-                            </div>
-                        </td>
-                        <td><button class="delete-btn">Удалить</button></td>
-                    </tr>
-                </tbody>
-            </table>
+                <div class="tasks-wrapper">
+                    <div class="tasks-list-section">
+                        <ul class="tasks-list" id="tasksList">
+                            <li class="task-item">
+                                <div class="task-header">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <div class="task-avatar">Р</div>
+                                    <div class="task-main-info">
+                                        <h3>Разработка API</h3>
+                                        <p class="task-status">Средний приоритет</p>
+                                    </div>
+                                    <div class="task-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                                <button class="task-delete-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
 
-            <button class="add-btn">+ Добавить сотрудника</button>
+                            <li class="task-item">
+                                <div class="task-header">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <div class="task-avatar">С</div>
+                                    <div class="task-main-info">
+                                        <h3>Собрание команды</h3>
+                                        <p class="task-status">Высокий приоритет</p>
+                                    </div>
+                                    <div class="task-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                                <button class="task-delete-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+
+                            <li class="task-item">
+                                <div class="task-header">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <div class="task-avatar">В</div>
+                                    <div class="task-main-info">
+                                        <h3>Внесение изменений</h3>
+                                        <p class="task-status">Средний приоритет</p>
+                                    </div>
+                                    <div class="task-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                                <button class="task-delete-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+
+                            <li class="task-item">
+                                <div class="task-header">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <div class="task-avatar">К</div>
+                                    <div class="task-main-info">
+                                        <h3>Код рефакторинга</h3>
+                                        <p class="task-status">Низкий приоритет</p>
+                                    </div>
+                                    <div class="task-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                                <button class="task-delete-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+
+                            <li class="task-item">
+                                <div class="task-header">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <div class="task-avatar">П</div>
+                                    <div class="task-main-info">
+                                        <h3>Подготовка документации</h3>
+                                        <p class="task-status">Средний приоритет</p>
+                                    </div>
+                                    <div class="task-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                                <button class="task-delete-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+
+                            <li class="task-item">
+                                <div class="task-header">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <div class="task-avatar">Н</div>
+                                    <div class="task-main-info">
+                                        <h3>Новая функция тестирования</h3>
+                                        <p class="task-status">Высокий приоритет</p>
+                                    </div>
+                                    <div class="task-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                                <button class="task-delete-btn" onclick="deleteTask(this)">✕</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="task-form-section">
+                        <h2>+ Добавить новую задачу</h2>
+
+                        <form id="taskForm" class="task-form">
+                            <div class="form-group">
+                                <label for="taskTitle">Название задачи</label>
+                                <input type="text" id="taskTitle" placeholder="Введите название" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="taskPriority">Приоритет</label>
+                                <select id="taskPriority" required>
+                                    <option value="Низкий приоритет">Низкий приоритет</option>
+                                    <option value="Средний приоритет">Средний приоритет</option>
+                                    <option value="Высокий приоритет">Высокий приоритет</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="taskAssignee">Назначить на</label>
+                                <select id="taskAssignee" required>
+                                    <option value="">Выберите сотрудника</option>
+                                    <option value="Иван Петров">Иван Петров</option>
+                                    <option value="Мария Сидорова">Мария Сидорова</option>
+                                    <option value="Алексей Козлов">Алексей Козлов</option>
+                                    <option value="Ольга Волкова">Ольга Волкова</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="taskDeadline">Дедлайн</label>
+                                <input type="datetime-local" id="taskDeadline" required>
+                            </div>
+
+                            <button type="submit" class="form-submit-btn">Добавить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
+
+    <script src="tasks.js"></script>
 </body>
 </html>
