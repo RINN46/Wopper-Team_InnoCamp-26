@@ -32,6 +32,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root(request: Request):
     return templates.TemplateResponse(request, "Regestr_Web.html", {})
 
+@app.get("/main_page", response_class=HTMLResponse)
+async def main_page(request: Request):
+    return templates.TemplateResponse(request, "Regestr_Web.html", {})
 
 def check_login(login):
     if 5 <= len(login) <= 75:
