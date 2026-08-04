@@ -10,6 +10,7 @@ body {
     color: #333;
 }
 
+/* Шапка */
 header {
     background: #b8c741;
     color: white;
@@ -44,14 +45,14 @@ header {
     opacity: 0.7;
 }
 
-
+/* Контейнер */
 .container {
     display: flex;
     gap: 0;
     min-height: calc(100vh - 60px);
 }
 
-
+/* Aside */
 aside {
     width: 180px;
     background: #b8c741;
@@ -78,6 +79,7 @@ aside {
     text-transform: capitalize;
 }
 
+/* ===== TASKS PAGE ===== */
 
 .main-content {
     padding: 30px;
