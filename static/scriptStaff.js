@@ -6,12 +6,34 @@ async function update(){
     chat.innerHTML = "";
 
     for (const message of messages.staff) {
+        console.log(message.login)
         chat.innerHTML += `
-            <div class="schedule-card">
-                <h3>${message.title}</h3>
-                <p>${message.time}</p>
-                <span class="event-type">${message.description}</span>
-            </div>
+            <tr>
+                <td class="employee-name">${message.name}</td>
+                <td>${message.stack}</td>
+                <td>
+                    <div class="rating-container">
+                        <input type="number" class="rating-input" value=${message.mark} min="0" max="5">
+                        <span>/5</span>
+                    </div>
+                </td>
+                <td><button class="delete-btn" onclick="delete_s('${message.login}')">Удалить</button></td>
+            </tr>
         `;
     }
 }
+
+async function delete_s(login){
+    const response = await fetch("/remove_user", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            login
+        })
+    });
+    const data = await response.json()
+    update()
+}
+update()
