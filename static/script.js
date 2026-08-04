@@ -5,12 +5,6 @@ async function click_register(){
     const name = document.getElementById("name").value
     const stack = document.getElementById("stack").value
 
-    const params = new URLSearchParams({
-        login,
-        password,
-        name,
-        stack
-    });
 
     const response = await fetch("/reg", {
         method: "POST",
@@ -25,23 +19,22 @@ async function click_register(){
         })
     });
     console.log(login, password, name, stack)
-    console.log(response.status);
-    console.log(await response.text());
     const data = await response.json()
-    if (data.OK){
+    console.log(data.OK)
+    if (data.OK === true){
         location.href = "/main_page"
     }else{
         console.log("loh")
         if (data.error === 1){
-            alert("Incorrect login")
+            alert(`Incorrect login, ${data.description}`)
         } else if (data.error === 2){
-            alert("Incorrect password")
+            alert(`Incorrect password, ${data.description}`)
 
         } else if (data.error === 3){
-            alert("Incorrect name")
+            alert(`Incorrect name, ${data.description}`)
 
         } else if (data.error === 4){
-            alert("Incorrect stack")
+            alert(`Incorrect stack, ${data.description}`)
         }
     }
 }
