@@ -299,3 +299,76 @@ async def get_user(id: int):
         "OK": False,
         "error": "Пользователь не найден"
     }
+
+
+@app.get("/user_timetable")
+async def user_timetable(request: Request):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+
+    return {
+        "OK": True,
+        "timetable": user.timetable
+    }
+
+
+@app.get("/organization_timetable")
+async def organization_timetable(request: Request):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    org = find_organization(user.id)
+
+    if org is None:
+        return {
+            "OK": False,
+            "error": "Организация не найдена"
+        }
+
+    return {
+        "OK": True,
+        "organization": org.organization,
+        "timetable": org.timetable
+    }
+
+
+@app.post("/organization_timetable/add")
+async def add_timetable(request: Request, event: str):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    org = find_organization(user.id)
+
+    if org is None:
+        return {"OK": False}
+
+    org.timetable.append(event)
+
+    return {"OK": True}
+
+
+@app.post("/user_timetable/add")
+async def add_user_timetable(request: Request, event: str):
+
+    session_id = request.cookies.get("session_id")
+
+    if session_id not in sessions:
+        return {"OK": False}
+
+    user = users[sessions[session_id]]
+    user.timetable.append(event)
+
+    return {"OK": True}
