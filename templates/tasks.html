@@ -163,31 +163,16 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="taskPriority">Приоритет</label>
-                                <select id="taskPriority" required>
-                                    <option value="Низкий приоритет">Низкий приоритет</option>
-                                    <option value="Средний приоритет">Средний приоритет</option>
-                                    <option value="Высокий приоритет">Высокий приоритет</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="taskAssignee">Назначить на</label>
-                                <select id="taskAssignee" required>
-                                    <option value="">Выберите сотрудника</option>
-                                    <option value="Иван Петров">Иван Петров</option>
-                                    <option value="Мария Сидорова">Мария Сидорова</option>
-                                    <option value="Алексей Козлов">Алексей Козлов</option>
-                                    <option value="Ольга Волкова">Ольга Волкова</option>
-                                </select>
+                                <input type="text" id="NameWrite" placeholder="Татьяна Пупкина">
                             </div>
 
                             <div class="form-group">
-                                <label for="taskDeadline">Дедлайн</label>
-                                <input type="datetime-local" id="taskDeadline" required>
+                                <label for="taskDeadline" >Дедлайн</label>
+                                <input type="text" id="taskDeadline" required placeholder="15 января">
                             </div>
 
-                            <button type="submit" class="form-submit-btn">Добавить</button>
+                            <button type="submit" class="send_but">Добавить</button>
                         </form>
                     </div>
                 </div>
