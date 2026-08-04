@@ -279,3 +279,11 @@ async def personal(request: Request):
 @app.get("/timetable", response_class=HTMLResponse)
 async def timetable(request: Request):
     return templates.TemplateResponse(request, "timetable.html", {})
+
+@app.get("/")
+def show_members():
+    return templates.TemplateResponse(
+        "employees.html",
+        {"employees": employees}
+    )
+
