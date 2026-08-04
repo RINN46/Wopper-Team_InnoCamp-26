@@ -146,8 +146,8 @@ def check_stack(stack):
 
 class Message:
     def __init__(self):
-        self.sender = 0      # ID отправителя
-        self.receiver = 0    # ID получателя
+        self.sender = 0
+        self.receiver = 0
         self.text = ""
 
 messages = []
