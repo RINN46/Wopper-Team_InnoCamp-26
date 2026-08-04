@@ -87,7 +87,6 @@ async def reg(login: str, password: str, name: str, clock: int, tags: str, biogr
     users.append(u)
     return {"OK": True, "id": ID}
 
-
 def check_name(name):
     if len(name) < 6 or len(name) > 200:
         return False
@@ -126,3 +125,21 @@ async def login(login: str, password: str):
         "OK": False,
         "id": 0
     }
+
+def reg_company(name: str, user: str):
+    if len(name) < 2 or len(name) > 40:
+        return False
+    words = name.split()
+    if len(user) == 0:
+        return False
+    
+    for word in words:
+        if not ('А' <= word[0] <= 'Я'):
+            return False
+
+        for char in word[1:]:
+            if not ('а' <= char <= 'я'):
+                return False
+
+    return True
+
