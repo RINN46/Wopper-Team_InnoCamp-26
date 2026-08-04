@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./RegBlock.CSS" />
+    <link rel="stylesheet" href="../static/RegBlock.CSS" />
     <title>Регистрация</title>
-
+    <script src="../static/script.js"></script>
     <!-- Подключаем шрифт Inter с Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
                 <label for="Name" class="text">Имя Фамилия</label>
                 <input type="text"
                     class="text_input_element"
-                    id="Name"
+                    id="name"
                     name="Name"
                     placeholder="Введите Имя и Фамилию"
                     required
@@ -49,8 +49,8 @@
 
 
                 <!-- Поле: Пароль -->
-                <label for="email" class="text">Стек</label>
-                <textarea name="Stec" id="Stec" class="text_input_element" placeholder="Front-End, Back-End, Design"></textarea>
+                <label for="stack" class="text">Стек</label>
+                <textarea name="Stack" id="stack" class="text_input_element" placeholder="Front-End, Back-End, Design"></textarea>
 
                 <label for="password" class="text">Пароль</label>
                 <input type="password"
@@ -75,12 +75,12 @@
 
 
                 <!-- Кнопка -->
-                <button class="send_but">Отправить</button>
+                <button class="send_but" onclick="click_register()">Отправить</button>
 
                 <br>
 
                 <div class="centred_items">
-                    <a href="./Sign_In.html" class="text">у меня уже есть аккаунта</a>
+                    <a href="./Sign_In.html" class="text">у меня уже есть аккаунт</a>
                 </div>
 
             </div>
