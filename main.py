@@ -25,12 +25,19 @@ class OrgCreateData(BaseModel):
     owner: str
     name: str
 
+class TimetableTask:
+    def __init__(self):
+        self.title = ""
+        self.description = ""
+        self.time = ""
+
 class User:
     def __init__(self):
         self.steck = ""
         self.login = ""
         self.password = ""
         self.name = ""
+        self.timetable = []
         self.id = 0
 
 class Organization:
@@ -330,10 +337,16 @@ async def user_timetable(request: Request):
         return {"OK": False}
 
     user = users[sessions[session_id]]
-
+    table = []
+    for i in user.timetable:
+        table.append({
+            "title": i.title,
+            "time": i.time,
+            "description": i.description
+        })
     return {
         "OK": True,
-        "timetable": user.timetable
+        "timetable": table
     }
 
 
