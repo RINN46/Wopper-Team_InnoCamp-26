@@ -276,7 +276,7 @@ async def login(request, login: str, password: str):
 def check_stack(stack):
     if 3 <= len(stack) <= 75:
         return True
-    return False
+    return "Стек должен содержать от 3 до 75 символов"
 
 class Message:
     def __init__(self):
