@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkFlow - Сотрудники</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">WorkFlow.</div>
+        <div class="header-actions">
+            <a href="#" class="header-link">ЛС</a>
+            <a href="#" class="header-link">Профиль</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">расписание</a>
+                <a href="employees.html" class="nav-item active">Сотрудники</a>
+                <a href="tasks.html" class="nav-item">задачи</a>
+                <a href="management.html" class="nav-item">менеджмент</a>
+            </nav>
+        </aside>
+
+        <main>
+            <h1>Сотрудники</h1>
+
+            <table class="employees-table">
+                <thead>
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Должность</th>
+                        <th>Оценка</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="employee-name">Иван Петров</td>
+                        <td>Разработчик</td>
+                        <td>
+                            <div class="rating-container">
+                                <input type="number" class="rating-input" value="4" min="0" max="5">
+                                <span>/5</span>
+                            </div>
+                        </td>
+                        <td><button class="delete-btn">Удалить</button></td>
+                    </tr>
+                    <tr>
+                        <td class="employee-name">Мария Сидорова</td>
+                        <td>Дизайнер</td>
+                        <td>
+                            <div class="rating-container">
+                                <input type="number" class="rating-input" value="5" min="0" max="5">
+                                <span>/5</span>
+                            </div>
+                        </td>
+                        <td><button class="delete-btn">Удалить</button></td>
+                    </tr>
+                    <tr>
+                        <td class="employee-name">Алексей Козлов</td>
+                        <td>Менеджер</td>
+                        <td>
+                            <div class="rating-container">
+                                <input type="number" class="rating-input" value="4" min="0" max="5">
+                                <span>/5</span>
+                            </div>
+                        </td>
+                        <td><button class="delete-btn">Удалить</button></td>
+                    </tr>
+                    <tr>
+                        <td class="employee-name">Ольга Волкова</td>
+                        <td>Аналитик</td>
+                        <td>
+                            <div class="rating-container">
+                                <input type="number" class="rating-input" value="4" min="0" max="5">
+                                <span>/5</span>
+                            </div>
+                        </td>
+                        <td><button class="delete-btn">Удалить</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="add-btn">+ Добавить сотрудника</button>
+        </main>
+    </div>
+</body>
+</html>
