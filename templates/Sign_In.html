@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./Sign_In.CSS" />
+    <title>Галерея мемов - Регистрация</title>
+
+    <!-- Подключаем шрифт Inter с Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <main>
+        <div class="main-wrapper">
+            <div class="Main_Border">
+
+                <!-- Заголовок -->
+                <div class="reg_ID">
+                    <h1 class="H1">Вход</h1>
+                </div>
+
+                <!-- Поле: Имя -->
+                <label for="login" class="text">Логин</label>
+                <input type="text"
+                    class="text_input_element"
+                    id="login"
+                    name="login"
+                    placeholder="Введите Логин"
+                    required
+                    minlength="2"
+                    maxlength="67"
+                >
+
+                <!-- Поле: Фамилия -->
+                <label for= password" class="text">Пароль</label>
+                <input type="password"
+                    class="text_input_element"
+                    id="password"
+                    name="password"
+                    placeholder="Введите Пароль"
+                    required
+                >
+
+                <br>
+
+                <!-- Кнопка -->
+                <button class="send_but">Отправить</button>
+
+                <br>
+
+                <div class="centred_items">
+                    <a href="./Regestr_Web.html" class="text">у меня еще нет аккаунта</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>

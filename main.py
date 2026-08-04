@@ -3,12 +3,19 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
+from pydantic import BaseModel
 
 users = []
 sessions = {
 
 }
 app = fastapi.FastAPI()
+
+class RegisterData(BaseModel):
+    login: str
+    password: str
+    name: str
+    stack: str
 
 class User:
     def __init__(self):
@@ -136,7 +143,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return templates.TemplateResponse(request, "Regestr_Web.html", {})
+    return templates.TemplateResponse(request, "RegBlock.html", {})
 
 @app.get("/main_page", response_class=HTMLResponse)
 async def main_page(request: Request):
@@ -155,7 +162,7 @@ def check_login(login):
 
 def first_id():
     a = 0
-    while a in sorted(users, key=lambda x: x["ID"]):
+    while a in sorted(users, key=lambda x: x.ID):
         a += 1
     return a
 
@@ -186,7 +193,11 @@ def check_password(password):
 
 
 @app.post("/reg")
-async def reg(request, login: str, password: str, name: str, stack: str):
+async def reg(request: Request, register_data: RegisterData):
+    login = register_data.login
+    password = register_data.password
+    name = register_data.name
+    stack = register_data.stack
     u = User()
     if not check_login(login):
         return {"OK": False, "id": 0, "error": 1}
@@ -378,4 +389,8 @@ async def add_user_timetable(request: Request, event: str):
     user = users[sessions[session_id]]
     user.timetable.append(event)
 
+
     return {"OK": True}
+
+    return {"OK": True}
+
